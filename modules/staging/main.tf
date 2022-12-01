@@ -1,23 +1,15 @@
 
-# data "aws_apigatewayv2_api" "dev-aws-python-flask-api-project" {
-#     api_id = var.api_id
- 
-# }
-
 data "aws_api_gateway_rest_api" "my_rest_api" {
-  name = "zappa-flask-dev"
+  name = "zappa-flask-${var.api-stage-name}"
 }
-
-output "REST-API-ID" {
-    value=data.aws_api_gateway_rest_api.my_rest_api.id
-}
-
-
-
 
 resource "aws_acm_certificate" "example" {
   domain_name       = var.domain_name
   validation_method = "DNS"
+
+  tags = {
+    Environment = var.api-stage-name
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -48,9 +40,14 @@ resource "aws_acm_certificate_validation" "example" {
 
 
 resource "aws_api_gateway_domain_name" "example" {
-  domain_name = var.domain_name
-  certificate_arn = aws_acm_certificate_validation.example.certificate_arn
+  domain_name              = var.domain_name
+  regional_certificate_arn = aws_acm_certificate_validation.example.certificate_arn
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
+
 
 resource "aws_api_gateway_base_path_mapping" "example" {
   api_id      = data.aws_api_gateway_rest_api.my_rest_api.id
@@ -58,34 +55,28 @@ resource "aws_api_gateway_base_path_mapping" "example" {
   stage_name       = var.api-stage-name
 }
 
-
-
+# Example DNS record using Route53.
+# Route53 is not specifically required; any DNS host can be used.
 resource "aws_route53_record" "example2" {
   name    = aws_api_gateway_domain_name.example.domain_name
   type    = "A"
   zone_id = var.hosted_zone_id
 
-alias {
+  alias {
     evaluate_target_health = true
-    name                   = aws_api_gateway_domain_name.example.cloudfront_domain_name
-    zone_id                = aws_api_gateway_domain_name.example.cloudfront_zone_id
+    name                   = aws_api_gateway_domain_name.example.regional_domain_name
+    zone_id                = aws_api_gateway_domain_name.example.regional_zone_id
   }
-
-
-  #   weighted_routing_policy {
-  #   weight = var.weight
-  # }
-  
-  # geolocation_routing_policy{
-    
+ 
+  #  geolocation_routing_policy{
   #   continent=var.continent
+  #   # country="CA"
   # }
 
-  latency_routing_policy {
+    latency_routing_policy {
     region=var.identifier_for_route53_record
   }
 
   set_identifier = var.identifier_for_route53_record
+
 }
-
-
