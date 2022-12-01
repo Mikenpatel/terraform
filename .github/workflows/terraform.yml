@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ../stag
+        working-directory: stag
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -28,6 +28,10 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
+
+      - name: Terraform plan
+        id: init
+        run: terraform plan
 
     
       - name: Terraform Apply
