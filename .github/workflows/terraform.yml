@@ -46,7 +46,7 @@ jobs:
       - name: Terraform Apply
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply 
-        working-directory: ./stag
+        working-directory: /home/runner/work/terraform/terraform/stag
 
       - name: Print working directory
         run: pwd
