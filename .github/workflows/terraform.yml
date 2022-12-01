@@ -66,7 +66,7 @@ jobs:
         with:
           tf_actions_version: 0.12.13
           tf_actions_subcommand: 'init'
-          tf_actions_working_dir: './src'
+          tf_actions_working_dir: 'stag'
           tf_actions_comment: true
         env:
           GITHUB_TOKEN: ${{ secrets.TF_API_TOKEN }}
