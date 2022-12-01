@@ -1,80 +1,53 @@
-# name: "Terraform"
+name: "Terraform"
 
-# on:
-#   push:
-#     branches:
-#       - main
-
-
-# jobs:
-#   terraform:
-#     name: "Terraform"
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
-
-#       - name: Setup Terraform
-#         uses: hashicorp/setup-terraform@v1
-#         with:
-#           # terraform_version: 0.13.0:
-#           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-#       # - name: Terraform Format
-#       #   id: fmt
-#       #   run: terraform fmt -check
-
-#       - name: Terraform Init
-#         id: init
-#         run: |
-#           terraform init
-#           pwd
-#         working-directory: ./stag
-
-#       - name: Terraform Validate
-#         id: validate
-#         run: terraform validate 
-#         working-directory: ./stag
-
-#       - name: Terraform Plan
-#         id: plan
-#         #if: github.event_name == 'pull_request'
-#         run: terraform plan 
-#         continue-on-error: true
-#         working-directory: ./stag
-
-#       - name: Terraform Apply
-#         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#         run: terraform apply 
-#         working-directory: /home/runner/work/terraform/terraform/stag
-
-#       - name: Print working directory
-#         run: pwd
-
-name: 'Terraform GitHub Actions'
 on:
-  - push
+  push:
+    branches:
+      - main
+
+
 jobs:
-  root:
-    name: 'Terraform (root)'
+  terraform:
+    name: "Terraform"
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
-      # - name: Checkout
-      #   uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-      - name: 'Terraform Init'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'init'
-          tf_actions_working_dir: 'stag'
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.TF_API_TOKEN }}
+
+      # - name: Terraform Format
+      #   id: fmt
+      #   run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: |
+          terraform init
+          pwd
+        working-directory: stag
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate 
+        working-directory: stag
+
+      - name: Terraform Plan
+        id: plan
+        #if: github.event_name == 'pull_request'
+        run: terraform plan 
+        continue-on-error: true
+        working-directory: stag
+
+      - name: Terraform Apply
+        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply 
+        working-directory: stag
+
+      - name: Print working directory
+        run: pwd
+
