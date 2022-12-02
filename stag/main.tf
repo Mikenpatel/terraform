@@ -10,7 +10,7 @@ provider "aws"{
 data "aws_region" "current" {}
 
 module "us-east-1-serverless" {
-   source="./modules/staging"
+   source="../modules/staging"
   # source = path.module
 
   domain_name = "www.mikenpatel.click"
