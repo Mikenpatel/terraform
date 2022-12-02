@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response,request
 import os
 import json
 import pymongo
@@ -53,7 +53,9 @@ def database():
 
 @app.route("/insert",methods=["POST"])
 def insert():
-    mycol.insert_one({'Name':"Miken Patel","region":servertype, "date": datetime.datetime.utcnow()})
+    data = request.json
+    # mycol.insert_one({'Name':"Miken Patel","region":servertype, "date": datetime.datetime.utcnow()})
+    mycol.insert_one({'Name':data,"region":servertype, "date": datetime.datetime.utcnow()})
     return "Added"
 
 if __name__=="__main__":
