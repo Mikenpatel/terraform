@@ -28,10 +28,8 @@ servertype = os.environ['AWS_REGION']
 
 @app.route("/")
 def hello_from_root():
-    a=[]
-    for post in mycol.find({"region": servertype}).limit(5):
-       a.append(post)
-    return jsonify(a)
+
+    return "Hello There"
 
 @app.route("/type")
 def server_type():
@@ -43,5 +41,11 @@ def mongo():
     k=x['name']
     return jsonify({"name":k})
 
+@app.route("/database")
+def database():
+    a=[]
+    for post in mycol.find({"region": servertype}).limit(5):
+       a.append(post)
+    return jsonify(a)
 if __name__=="__main__":
     app.run()
