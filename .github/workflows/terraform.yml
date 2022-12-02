@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  terraform:
+  terraform-staging:
     name: "Terraform"
     runs-on: ubuntu-latest
     # defaults:
@@ -42,5 +42,75 @@ jobs:
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
         working-directory: stag
+
+  terraform-prod:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     working-directory: stag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          # terraform_version: 0.13.0:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: prod
+
+      - name: Terraform Plan
+        id: plan
+        # if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+        working-directory: prod
+
+    
+      - name: Terraform Apply "-lock=false"
+        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+        working-directory: prod
+
+  terraform-dev:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     working-directory: stag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          # terraform_version: 0.13.0:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: dev
+
+      - name: Terraform Plan
+        id: plan
+        # if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+        working-directory: dev
+
+    
+      - name: Terraform Apply "-lock=false"
+        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false
+        working-directory: dev
+ 
+ 
  
 
