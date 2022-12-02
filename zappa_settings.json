@@ -1,0 +1,29 @@
+{
+    "dev": {
+        "app_function": "flask-api.app",
+        "aws_region": "sa-east-1",
+        "profile_name": "default",
+        "project_name": "zappa-flask",
+        "runtime": "python3.9",
+        "s3_bucket": "s3-bucket-for-lambda-sa-east-1"
+    },
+    "stag": {
+        "app_function": "flask-api.app",
+        "aws_region": "ca-central-1",
+        "profile_name": "default",
+        "project_name": "zappa-flask",
+        "runtime": "python3.9",
+        "s3_bucket": "s3-bucket-for-lambda-ca-central-1"
+    },
+    "prod": {
+        "app_function": "flask-api.app",
+        "aws_region": "us-west-1",
+        "profile_name": "default",
+        "project_name": "zappa-flask",
+        "runtime": "python3.9",
+        "s3_bucket": "s3-bucket-for-lambda-us-west-1"
+    },
+    "cors": true
+
+}
+  

@@ -1,6 +1,7 @@
 
 
-name: "Terraform"
+name: "zappa-Terraform-CI/CD"
+run-name: ${{github.actor}} is making CI/CD workflow for serverless application
 
 on:
   push:
@@ -9,139 +10,154 @@ on:
 
 
 jobs:
-  terraform-staging:
-    name: "Terraform"
+
+  Zappa-configuration:
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+  
+  Build-step:
+    runs-on: ubuntu-latest
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: stag
+    - name: configure AWS-Profile
+      run: |
+        aws configure set region us-east-1 --profile default
+        aws configure set aws_access_key_id ${{secrets.AWS_ACCESS_KEY_ID}} --profile default
+        aws configure set aws_secret_access_key ${{secrets.AWS_SECRET_ACCESS_KEY}} --profile default
 
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
-        working-directory: stag
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.9
+    - run: |
+        python --version
+        pip --version
+        pip install virtualenv
+        virtualenv --version
+        pwd
+        virtualenv venv
+        source venv/bin/activate
+        pip install pymongo
+        pip install zappa
+        pip install flask
+        pip install -U flask-cors
+        zappa deploy dev
+        zappa deploy prod
+        zappa deploy stag
+        # zappa init
+      continue-on-error: false
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+################     Terraform configuration started   ###################3
+
+
+  # terraform-staging:
+  #   name: "Terraform-staging-env-in-ca-central-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: stag
+
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: stag
 
     
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: stag
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: stag
 
-  terraform-prod:
-    name: "Terraform"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  # terraform-prod:
+  #   name: "Terraform-prod-env-in-us-west-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: prod
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: prod
 
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
-        working-directory: prod
-
-    
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: prod
-
-  terraform-dev:
-    name: "Terraform"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: dev
-
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
-        working-directory: dev
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: prod
 
     
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: dev
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: prod
+
+  # terraform-dev:
+  #   name: "Terraform-dev-env-in-sa-east-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: dev
+
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: dev
+
+    
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: dev
    
-  terraform-detroy:
-    name: "Terraform-destroy"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform destroy dev
-
-        run: terraform destroy -input=false
-        working-directory: dev
-
-      - name: Terraform destroy stag
-      
-        run: terraform destroy -input=false
-        working-directory: dev
-
-      - name: Terraform destroy prod
-
-        run: terraform destroy -input=false
-        working-directory: dev
-    
  
- 
-
