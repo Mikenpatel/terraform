@@ -3,6 +3,7 @@ import os
 import json
 import pymongo
 from flask_cors import CORS
+import datetime
 
 
 
@@ -45,8 +46,15 @@ def mongo():
 @app.route("/database")
 def database():
     a=[]
-    for i in mycol.find({"region": servertype}).limit(5):
+    for i in mycol.find({"region":servertype},sort=[( 'date', pymongo.DESCENDING )]).limit(50):
         a.append(i)
     return json.dumps(a,default=str)
+
+
+@app.route("/insert",methods=["POST"])
+def insert():
+    mycol.insert_one({'Name':"Miken Patel","region":servertype, "date": datetime.datetime.utcnow()})
+    return "Added"
+
 if __name__=="__main__":
     app.run()
