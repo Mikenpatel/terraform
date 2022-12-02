@@ -44,7 +44,7 @@ def mongo():
 @app.route("/database")
 def database():
     a=[]
-    for i in mycol.find({"region": servertype}).limit(5):
+    for i in mycol.find({"Name": "Miken-1"}).limit(5):
         a.append(i)
     return jsonify({"a":a})
 if __name__=="__main__":
