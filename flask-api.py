@@ -47,6 +47,6 @@ def database():
     a=[]
     for i in mycol.find({"region": servertype}).limit(5):
         a.append(i)
-    return json.dump(a,default=str)
+    return json.dumps(a,default=str)
 if __name__=="__main__":
     app.run()
