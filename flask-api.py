@@ -38,7 +38,7 @@ def server_type():
 @app.route("/data")
 def mongo():
     x = mycol.find_one()
-    k=x['name']
+    k=x['Name']
     return jsonify({"name":k})
 
 @app.route("/database")
