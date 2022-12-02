@@ -53,9 +53,10 @@ def database():
 
 @app.route("/insert",methods=["POST"])
 def insert():
-    data = request.json
+    # data = request.json
+    fname=request.form.get('fname')
     # mycol.insert_one({'Name':"Miken Patel","region":servertype, "date": datetime.datetime.utcnow()})
-    mycol.insert_one({'Name':data,"region":servertype, "date": datetime.datetime.utcnow()})
+    mycol.insert_one({'Name':fname,"region":servertype, "date": datetime.datetime.utcnow()})
     return "Added"
 
 if __name__=="__main__":
