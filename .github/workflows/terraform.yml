@@ -110,7 +110,38 @@ jobs:
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
         working-directory: dev
- 
+   
+  terraform-detroy:
+    name: "Terraform-destroy"
+    runs-on: ubuntu-latest
+    # defaults:
+    #   run:
+    #     working-directory: stag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          # terraform_version: 0.13.0:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform destroy dev
+
+        run: terraform destroy -input=false
+        working-directory: dev
+
+      - name: Terraform destroy stag
+      
+        run: terraform destroy -input=false
+        working-directory: dev
+
+      - name: Terraform destroy prod
+
+        run: terraform destroy -input=false
+        working-directory: dev
+    
  
  
 
