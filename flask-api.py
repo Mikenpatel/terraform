@@ -11,7 +11,7 @@ connection="mongodb+srv://Miken:Miken001@multi-region.ilmvkvm.mongodb.net/?retry
 client = pymongo.MongoClient(connection, serverSelectionTimeoutMS=5000)
 
 mydb =client["sample_airbnb"]
-mycol = mydb["listingsAndReviews"]
+mycol = mydb["users"]
 
 
 
@@ -28,7 +28,10 @@ servertype = os.environ['AWS_REGION']
 
 @app.route("/")
 def hello_from_root():
-    return "Hello There"
+    a=[]
+    for post in mycol.find({"region": servertype}).limit(5):
+       a.append(post)
+    return jsonify({"value":a})
 
 @app.route("/type")
 def server_type():
