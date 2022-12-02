@@ -45,8 +45,8 @@ def mongo():
 @app.route("/database")
 def database():
     a=[]
-    for i in mycol.find_one({"Name": "Miken-1"}).limit(5):
+    for i in mycol.find({"region": servertype}).limit(5):
         a.append(i)
-    return json.dump(a)
+    return json.dump(a,default=str)
 if __name__=="__main__":
     app.run()
