@@ -30,12 +30,12 @@ jobs:
         run: terraform init
         working-directory: stag
 
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: true
-        working-directory: stag
+      # - name: Terraform Plan
+      #   id: plan
+      #   # if: github.event_name == 'pull_request'
+      #   run: terraform plan -no-color -input=false
+      #   continue-on-error: true
+      #   working-directory: stag
 
     
       - name: Terraform Apply "-lock=false"
