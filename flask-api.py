@@ -46,6 +46,6 @@ def database():
     a=[]
     for i in mycol.find_one({"Name": "Miken-1"}).limit(5):
         a.append(i)
-    return jsonify({"a":a})
+    return jsonify(a)
 if __name__=="__main__":
     app.run()
