@@ -60,106 +60,106 @@ jobs:
 
 ################     Terraform configuration started   ###################3
 
-  terraform-staging:
-    name: "Terraform-staging-env-in-ca-central-1-region"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  # terraform-staging:
+  #   name: "Terraform-staging-env-in-ca-central-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: stag
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: stag
 
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: false
-        working-directory: stag
-
-    
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: stag
-
-  terraform-prod:
-    name: "Terraform-prod-env-in-us-west-1-region"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: prod
-
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: false
-        working-directory: prod
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: stag
 
     
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: prod
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: stag
 
-  terraform-dev:
-    name: "Terraform-dev-env-in-sa-east-1-region"
-    runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: stag
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  # terraform-prod:
+  #   name: "Terraform-prod-env-in-us-west-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: dev
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: prod
 
-      - name: Terraform Plan
-        id: plan
-        # if: github.event_name == 'pull_request'
-        run: terraform plan -no-color -input=false
-        continue-on-error: false
-        working-directory: dev
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: prod
 
     
-      - name: Terraform Apply "-lock=false"
-        # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: dev
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: prod
+
+  # terraform-dev:
+  #   name: "Terraform-dev-env-in-sa-east-1-region"
+  #   runs-on: ubuntu-latest
+  #   # defaults:
+  #   #   run:
+  #   #     working-directory: stag
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         # terraform_version: 0.13.0:
+  #         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+  #     - name: Terraform Init
+  #       id: init
+  #       run: terraform init
+  #       working-directory: dev
+
+  #     - name: Terraform Plan
+  #       id: plan
+  #       # if: github.event_name == 'pull_request'
+  #       run: terraform plan -no-color -input=false
+  #       continue-on-error: false
+  #       working-directory: dev
+
+    
+  #     - name: Terraform Apply "-lock=false"
+  #       # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
+  #       working-directory: dev
    
  

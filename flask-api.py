@@ -31,7 +31,7 @@ def hello_from_root():
     a=[]
     for post in mycol.find({"region": servertype}).limit(5):
        a.append(post)
-    return jsonify({"value":a})
+    return jsonify(a)
 
 @app.route("/type")
 def server_type():
