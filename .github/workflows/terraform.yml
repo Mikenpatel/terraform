@@ -29,11 +29,17 @@ jobs:
         id: init
         run: terraform init
 
-
+      - name: Terraform Plan
+        id: plan
+        # if: github.event_name == 'pull_request'
+        run: terraform plan -no-color -input=false
+        continue-on-error: true
+        working-directory: stag
 
     
       - name: Terraform Apply "-lock=false"
         # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply 
+        run: terraform apply -auto-approve -input=false
+        working-directory: stag
  
 
